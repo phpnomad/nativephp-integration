@@ -25,9 +25,9 @@ class ServeCommand implements Command
 
     public function handle(Input $input): int
     {
-        $host = (string) $input->get('host');
-        $port = (string) $input->get('port');
-        $script = (string) $input->get('script');
+        $host = (string) $input->getParam('host');
+        $port = (string) $input->getParam('port');
+        $script = (string) $input->getParam('script');
 
         if ($script === '') {
             fwrite(STDERR, "--script is required\n");
