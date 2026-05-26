@@ -1,0 +1,16 @@
+<?php
+/**
+ * PHPNomad CLI entry point. Boots the Kernel — which registers
+ * native:config, native:php-ini, and native:serve as Symfony Console
+ * commands — and dispatches the argv command.
+ */
+
+declare(strict_types=1);
+
+require __DIR__ . '/../../../vendor/autoload.php';
+
+use PHPNomad\Console\Interfaces\ConsoleStrategy;
+use SandboxApp\Kernel;
+
+$container = Kernel::boot();
+$container->get(ConsoleStrategy::class)->run();

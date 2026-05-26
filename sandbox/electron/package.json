@@ -1,0 +1,16 @@
+{
+  "name": "phpnomad-nativephp-experiment",
+  "version": "0.0.1",
+  "private": true,
+  "main": "main-full.js",
+  "dependencies": {
+    "@nativephp/electron-plugin": "^0.5.5",
+    "electron": "^33.4.11"
+  },
+  "scripts": {
+    "postinstall": "patch-package"
+  },
+  "devDependencies": {
+    "patch-package": "^8.0.1"
+  }
+}

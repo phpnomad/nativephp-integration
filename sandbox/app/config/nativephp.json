@@ -1,0 +1,12 @@
+{
+    "version": "0.0.1",
+    "app_id": "us.standiford.phpnomad.experiment",
+    "author": "Alex Standiford",
+    "description": "PHPNomad NativePHP integration PoC",
+    "website": "https://example.com",
+    "deeplink_scheme": null,
+    "updater": { "enabled": false },
+    "php_ini": {
+        "memory_limit": "512M"
+    }
+}

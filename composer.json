@@ -1,0 +1,61 @@
+{
+    "name": "phpnomad/nativephp-integration",
+    "description": "Experimental PHPNomad integration for NativePHP — host adapter that lets a PHPNomad app run as the PHP guest inside an Electron desktop process, without Laravel.",
+    "type": "library",
+    "keywords": [
+        "phpnomad",
+        "nativephp",
+        "electron",
+        "desktop",
+        "integration"
+    ],
+    "homepage": "https://github.com/phpnomad/nativephp-integration",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alex Standiford",
+            "email": "alex@standiford.us"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "phpnomad/di": "^2.0",
+        "phpnomad/loader": "^1.0 || ^2.0",
+        "phpnomad/rest": "^2.0",
+        "phpnomad/console": "^1.0",
+        "phpnomad/event": "^1.0",
+        "phpnomad/fastroute-rest-integration": "^1.0",
+        "phpnomad/symfony-console-integration": "dev-main",
+        "phpnomad/symfony-event-dispatcher-integration": "^1.0",
+        "phpnomad/json-config-integration": "^1.0",
+        "phpnomad/datastore": "^2.0",
+        "guzzlehttp/guzzle": "^7.9"
+    },
+    "require-dev": {
+        "phpnomad/di-container": "^1.0",
+        "phpnomad/tests": "^0.1.0 || ^0.3.0 || ^0.4.0",
+        "phpunit/phpunit": "^11"
+    },
+    "autoload": {
+        "psr-4": {
+            "PHPNomad\\NativePHP\\Integration\\": "lib/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PHPNomad\\NativePHP\\Integration\\Tests\\": "tests/",
+            "SandboxApp\\": "sandbox/app/src/"
+        }
+    },
+    "scripts": {
+        "php-cs-fixer": "php-cs-fixer fix",
+        "test": "phpunit"
+    },
+    "config": {
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

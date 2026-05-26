@@ -1,0 +1,72 @@
+diff --git a/node_modules/@nativephp/electron-plugin/dist/server/php.js b/node_modules/@nativephp/electron-plugin/dist/server/php.js
+index 2717c6a..9514762 100644
+--- a/node_modules/@nativephp/electron-plugin/dist/server/php.js
++++ b/node_modules/@nativephp/electron-plugin/dist/server/php.js
+@@ -27,6 +27,12 @@ const databasePath = (0, path_1.join)(electron_1.app.getPath('userData'), 'datab
+ const databaseFile = (0, path_1.join)(databasePath, 'database.sqlite');
+ const argumentEnv = getArgumentEnv();
+ const appPath = getAppPath();
++// PHPNomad PoC patch: allow non-Laravel apps to provide their own bootstrap CLI.
++const BOOT_BIN = process.env.NATIVEPHP_PHP_BOOT_BIN || 'artisan';
++const CONFIG_CMD = process.env.NATIVEPHP_PHP_CONFIG_CMD || 'native:config';
++const PHPINI_CMD = process.env.NATIVEPHP_PHP_PHPINI_CMD || 'native:php-ini';
++const SERVER_SCRIPT = process.env.NATIVEPHP_SERVER_SCRIPT || '';
++const SKIP_LARAVEL_SETUP = process.env.NATIVEPHP_SKIP_LARAVEL_SETUP === '1';
+ function getPhpPort() {
+     return __awaiter(this, void 0, void 0, function* () {
+         return yield (0, get_port_1.default)({
+@@ -46,7 +52,7 @@ function retrievePhpIniSettings() {
+             cwd: appPath,
+             env
+         };
+-        return yield (0, util_1.promisify)(child_process_1.execFile)(state_1.default.php, ['artisan', 'native:php-ini'], phpOptions);
++        return yield (0, util_1.promisify)(child_process_1.execFile)(state_1.default.php, [BOOT_BIN, PHPINI_CMD], phpOptions);
+     });
+ }
+ exports.retrievePhpIniSettings = retrievePhpIniSettings;
+@@ -61,7 +67,7 @@ function retrieveNativePHPConfig() {
+             cwd: appPath,
+             env
+         };
+-        return yield (0, util_1.promisify)(child_process_1.execFile)(state_1.default.php, ['artisan', 'native:config'], phpOptions);
++        return yield (0, util_1.promisify)(child_process_1.execFile)(state_1.default.php, [BOOT_BIN, CONFIG_CMD], phpOptions);
+     });
+ }
+ exports.retrieveNativePHPConfig = retrieveNativePHPConfig;
+@@ -176,20 +182,25 @@ function serveApp(secret, apiPort, phpIniSettings) {
+             env
+         };
+         const store = new electron_store_1.default();
+-        callPhp(['artisan', 'storage:link', '--force'], phpOptions, phpIniSettings);
+-        if (store.get('migrated_version') !== electron_1.app.getVersion() && process.env.NODE_ENV !== 'development') {
+-            console.log('Migrating database...');
+-            callPhp(['artisan', 'migrate', '--force'], phpOptions, phpIniSettings);
+-            store.set('migrated_version', electron_1.app.getVersion());
+-        }
+-        if (process.env.NODE_ENV === 'development') {
+-            console.log('Skipping Database migration while in development.');
+-            console.log('You may migrate manually by running: php artisan native:migrate');
++        if (!SKIP_LARAVEL_SETUP) {
++            callPhp(['artisan', 'storage:link', '--force'], phpOptions, phpIniSettings);
++            if (store.get('migrated_version') !== electron_1.app.getVersion() && process.env.NODE_ENV !== 'development') {
++                console.log('Migrating database...');
++                callPhp(['artisan', 'migrate', '--force'], phpOptions, phpIniSettings);
++                store.set('migrated_version', electron_1.app.getVersion());
++            }
++            if (process.env.NODE_ENV === 'development') {
++                console.log('Skipping Database migration while in development.');
++                console.log('You may migrate manually by running: php artisan native:migrate');
++            }
+         }
+         const phpPort = yield getPhpPort();
+-        const serverPath = (0, path_1.join)(appPath, 'vendor', 'laravel', 'framework', 'src', 'Illuminate', 'Foundation', 'resources', 'server.php');
++        const serverPath = SERVER_SCRIPT
++            ? SERVER_SCRIPT
++            : (0, path_1.join)(appPath, 'vendor', 'laravel', 'framework', 'src', 'Illuminate', 'Foundation', 'resources', 'server.php');
++        const serverCwd = process.env.NATIVEPHP_SERVER_CWD || (0, path_1.join)(appPath, 'public');
+         const phpServer = callPhp(['-S', `127.0.0.1:${phpPort}`, serverPath], {
+-            cwd: (0, path_1.join)(appPath, 'public'),
++            cwd: serverCwd,
+             env
+         }, phpIniSettings);
+         const portRegex = /Development Server \(.*:([0-9]+)\) started/gm;
