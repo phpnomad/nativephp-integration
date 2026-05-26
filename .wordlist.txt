@@ -76,7 +76,9 @@ bootstrappers
 Bootstrapper
 Bootstrappers
 Initializer
+initializer
 Initializers
+initializers
 roadmap
 schemas
 txt
