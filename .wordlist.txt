@@ -61,6 +61,13 @@ upstream
 overridable
 runnable
 swappable
+notifier
+notifiers
+xclip
+LoggingNotification
+YourLoggingNotification
+rebind
+rebound
 serializable
 deserialize
 serialize

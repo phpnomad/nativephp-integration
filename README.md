@@ -87,16 +87,33 @@ nativePHP.bootstrap(app, icon, phpBinary, cert);
 
 A complete working example lives in `sandbox/electron/main-full.js`.
 
-## Using a Feature
+## Using a Strategy
+
+Type against the strategy interface — the Initializer binds the Electron-backed implementation by default, and consumers can rebind any of them (a mock for tests, a logger-backed notifier, an xclip-backed clipboard, etc.) without touching this package.
 
 ```php
-use PHPNomad\NativePHP\Integration\Features\Notification;
+use PHPNomad\NativePHP\Integration\Interfaces\NotificationStrategy;
 
-$container->get(Notification::class)
+$container->get(NotificationStrategy::class)
     ->title('Hello')
     ->body('From a PHPNomad app')
     ->show();
 ```
+
+The seventeen strategy interfaces live in `PHPNomad\NativePHP\Integration\Interfaces\` — `NotificationStrategy`, `WindowStrategy`, `DialogStrategy`, `ClipboardStrategy`, `ShellStrategy`, `SettingsStrategy`, `ScreenStrategy`, `SystemStrategy`, `DockStrategy`, `MenuBarStrategy`, `MenuStrategy`, `ContextMenuStrategy`, `PowerMonitorStrategy`, `GlobalShortcutStrategy`, `ProgressBarStrategy`, `ProcessStrategy`, `AlertStrategy`. The default Electron-backed implementations live in `PHPNomad\NativePHP\Integration\Strategies\` with the same simple names.
+
+## Swapping a Strategy
+
+```php
+use PHPNomad\NativePHP\Integration\Interfaces\NotificationStrategy;
+
+// In your own Initializer's getClassDefinitions():
+return [
+    YourLoggingNotification::class => NotificationStrategy::class,
+];
+```
+
+`YourLoggingNotification` implements `NotificationStrategy` and does whatever you want (logs to stdout, queues for batching, fans out to Slack — whatever). The rest of the integration uses the interface, so any consumer that calls `$container->get(NotificationStrategy::class)` resolves your implementation instead.
 
 ## Listening to a Native Event
 

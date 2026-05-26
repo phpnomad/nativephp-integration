@@ -5,7 +5,7 @@ namespace SandboxApp\Listeners;
 use PHPNomad\Events\Interfaces\CanHandle;
 use PHPNomad\Events\Interfaces\Event;
 use PHPNomad\NativePHP\Integration\Events\WindowFocused;
-use PHPNomad\NativePHP\Integration\Features\Notification;
+use PHPNomad\NativePHP\Integration\Strategies\NotificationStrategy;
 
 /**
  * @implements CanHandle<WindowFocused>

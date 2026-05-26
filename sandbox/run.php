@@ -11,15 +11,15 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use PHPNomad\Di\Container\Container;
 use PHPNomad\Loader\Bootstrapper;
-use PHPNomad\NativePHP\Integration\Features\Notification;
-use PHPNomad\NativePHP\Integration\Features\Window;
+use PHPNomad\NativePHP\Integration\Strategies\NotificationStrategy;
+use PHPNomad\NativePHP\Integration\Strategies\WindowStrategy;
 use PHPNomad\NativePHP\Integration\Initializer;
 
 $container = new Container();
 $bootstrapper = new Bootstrapper($container, new Initializer());
 $bootstrapper->load();
 
-$notification = $container->get(Notification::class);
+$notification = $container->get(NotificationStrategy::class);
 $notification
     ->title('Hello from PHPNomad')
     ->body('Routed through the NativePHP integration.')
@@ -28,7 +28,7 @@ $notification
 
 echo "notification dispatched\n";
 
-$window = $container->get(Window::class);
+$window = $container->get(WindowStrategy::class);
 $window
     ->url('https://example.com')
     ->title('PHPNomad window')

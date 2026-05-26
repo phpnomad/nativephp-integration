@@ -21,7 +21,7 @@ use PHPNomad\Events\Interfaces\EventStrategy;
 use PHPNomad\FastRoute\Component\Events\RequestInitiated;
 use PHPNomad\FastRoute\Component\Response as RestResponse;
 use PHPNomad\Http\Interfaces\Response;
-use PHPNomad\NativePHP\Integration\Features\Notification;
+use PHPNomad\NativePHP\Integration\Strategies\NotificationStrategy;
 use SandboxApp\Kernel;
 
 $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
@@ -55,7 +55,7 @@ if ($isNativeRoute) {
 
 // Demo endpoint: lets the renderer JS fire a notification through PHP.
 if ($method === 'POST' && $path === '/api/fire-notification') {
-    $container->get(Notification::class)
+    $container->get(NotificationStrategy::class)
         ->title('From the running PHPNomad app')
         ->body('Posted by clicking inside the BrowserWindow.')
         ->show();

@@ -4,7 +4,7 @@ namespace PHPNomad\NativePHP\Integration;
 
 use PHPNomad\NativePHP\Integration\Contracts\NativeClient;
 use PHPNomad\NativePHP\Integration\DataObjects\WindowDefinition;
-use PHPNomad\NativePHP\Integration\Features\Window;
+use PHPNomad\NativePHP\Integration\Strategies\WindowStrategy;
 
 class WindowManager
 {
@@ -71,8 +71,8 @@ class WindowManager
         $this->build($id)->close();
     }
 
-    private function build(string $id): Window
+    private function build(string $id): WindowStrategy
     {
-        return (new Window($this->client))->id($id);
+        return (new WindowStrategy($this->client))->id($id);
     }
 }
